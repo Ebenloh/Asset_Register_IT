@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registre PC Auto — IT</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Variables globales ─────────────────────────────────── */
+    :root {
+      --bg:          #0d0f14;
+      --surface:     #151820;
+      --surface-2:   #1c1f2b;
+      --border:      #2a2e3d;
+      --border-hi:   #3d4258;
+      --accent:      #00d4ff;
+      --accent-dim:  #00d4ff22;
+      --success:     #00e87a;
+      --success-dim: #00e87a18;
+      --error:       #ff4d6a;
+      --error-dim:   #ff4d6a18;
+      --warn:        #ffb347;
+      --text:        #e2e5f0;
+      --text-muted:  #6b7280;
+      --text-dim:    #9ca3af;
+      --mono:        'IBM Plex Mono', monospace;
+      --sans:        'IBM Plex Sans', sans-serif;
+      --radius:      6px;
+      --transition:  0.18s ease;
+    }
+
+    /* ── Reset & base ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 48px;
+    }
+
+    input,
+    select,
+    button {
+      min-height: 44px;
+    }
+
+    /* ── Grille de fond subtile ─────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── En-tête ────────────────────────────────────────────── */
+    header {
+      width: 100%;
+      max-width: 640px;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 3px;
+      padding: 3px 8px;
+      display: inline-block;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    h1 span { color: var(--accent); }
+
+    .header-sub {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* ── Carte principale ───────────────────────────────────── */
+    .card {
+      width: 100%;
+      max-width: 640px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-header .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    .card-header span {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .card-body { padding: 28px 24px; }
+
+    /* ── Formulaire ─────────────────────────────────────────── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 7px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    label .required {
+      color: var(--accent);
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    input, select {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 14px;
+      padding: 10px 14px;
+      transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    select option { background: var(--surface-2); }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+      background: var(--surface);
+    }
+
+    input::placeholder { color: var(--text-muted); font-size: 13px; }
+
+    /* Type machine — radios stylisés ───────────────────────── */
+    .type-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .type-option {
+      flex: 1;
+      position: relative;
+    }
+
+    .type-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+    }
+
+    .type-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+      background: var(--surface-2);
+      user-select: none;
+    }
+
+    .type-label .icon {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .type-label .name {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition: color var(--transition);
+    }
+
+    .type-label .preview {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-muted);
+      transition: color var(--transition);
+    }
+
+    .type-option input:checked + .type-label {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .type-option input:checked + .type-label .name  { color: var(--accent); }
+    .type-option input:checked + .type-label .preview { color: var(--accent); opacity: 0.7; }
+
+    /* Séparateur ───────────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 24px 0;
+    }
+
+    /* Bouton submit ────────────────────────────────────────── */
+    .btn-submit {
+      width: 100%;
+      padding: 13px 24px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      opacity: 0.88;
+      box-shadow: 0 0 20px var(--accent-dim);
+    }
+
+    .btn-submit:active:not(:disabled) { transform: scale(0.99); }
+
+    .btn-submit:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* Spinner ──────────────────────────────────────────────── */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(0,0,0,0.3);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Bannière de résultat ───────────────────────────────── */
+    #result-banner {
+      display: none;
+      width: 100%;
+      max-width: 640px;
+      margin-top: 20px;
+      border-radius: var(--radius);
+      border: 1px solid;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+      animation: slideDown 0.25s ease;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    #result-banner.success {
+      border-color: var(--success);
+      background: var(--success-dim);
+    }
+
+    #result-banner.error {
+      border-color: var(--error);
+      background: var(--error-dim);
+    }
+
+    .banner-inner {
+      padding: 18px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .banner-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .banner-icon { font-size: 20px; }
+
+    .banner-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    #result-banner.success .banner-title { color: var(--success); }
+    #result-banner.error   .banner-title { color: var(--error); }
+
+    #result-banner.success .banner-icon::before { content: '✓'; color: var(--success); }
+    #result-banner.error   .banner-icon::before { content: '✕'; color: var(--error); }
+
+    .banner-message { font-size: 13px; color: var(--text-dim); }
+
+    /* Carte NOM PC généré ──────────────────────────────────── */
+    .pc-name-card {
+      background: var(--surface);
+      border: 1px solid var(--success);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .pc-name-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .pc-name-value {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--success);
+      letter-spacing: 0.04em;
+    }
+
+    .btn-copy {
+      background: transparent;
+      border: 1px solid var(--border-hi);
+      border-radius: var(--radius);
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: border-color var(--transition), color var(--transition);
+    }
+
+    .btn-copy:hover {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    footer {
+      margin-top: 40px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: center;
+      letter-spacing: 0.08em;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Responsive mobile ───────────────────────────────────── */
+    @media (max-width: 480px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
+      .card-body { padding: 20px 16px; }
+      .pc-name-value { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── En-tête ────────────────────────────────────────────── -->
+  <header>
+    <div class="header-badge">IT · Internal Tool</div>
+    <h1>Registre <span>PC</span> Auto</h1>
+    <p class="header-sub">Génération automatique des noms machine — zéro doublon garanti</p>
+  </header>
+
+  <!-- ── Formulaire ─────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="dot"></div>
+      <span>Nouvel enregistrement</span>
+    </div>
+
+    <div class="card-body">
+      <form id="pc-form" novalidate>
+
+        <!-- Type de machine -->
+        <div class="form-group full">
+          <label>Type de machine <span class="required">*</span></label>
+          <div class="type-group">
+            <div class="type-option">
+              <input type="radio" name="typeMachine" id="type-laptop" value="Laptop" required />
+              <label class="type-label" for="type-laptop">
+                <span class="icon">💻</span>
+                <span class="name">Laptop</span>
+                <span class="preview">ITY-LTOP-5534…</span>
+              </label>
+            </div>
+            <div class="type-option">
+              <input type="radio" name="typeMachine" id="type-desktop" value="Desktop" />
+              <label class="type-label" for="type-desktop">
+                <span class="icon">🖥️</span>
+                <span class="name">Desktop</span>
+                <span class="preview">ITY-DSK-2511…</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+      <div class="form-grid">
+
+        <!-- Nom -->
+        <div class="form-group">
+          <label for="nom">Nom <span class="required">*</span></label>
+          <input
+            type="text"
+            id="nom"
+            name="nom"
+            placeholder="ex : EBEN LOH"
+            required
+          />
+        </div>
+
+        <!-- Département -->
+        <div class="form-group">
+          <label for="department">Département <span class="required">*</span></label>
+          <input
+            type="text"
+            id="department"
+            name="department"
+            placeholder="ex : IT"
+            required
+          />
+        </div>
+
+        <!-- Modèle -->
+        <div class="form-group">
+          <label for="modele">Modèle <span class="required">*</span></label>
+          <input
+            type="text"
+            id="modele"
+            name="modele"
+            placeholder="ex : HP EliteBook 630"
+            required
+          />
+        </div>
+
+        <!-- Date -->
+        <div class="form-group">
+          <label for="dateAttribution">
+            Date d’attribution
+            <span class="required">*</span>
+          </label>
+
+          <input
+            type="date"
+            id="dateAttribution"
+            name="dateAttribution"
+            required
+          />
+        </div>
+
+        <!-- Numéro de série -->
+        <div class="form-group">
+          <label for="numeroSerie">S/N <span class="required">*</span></label>
+          <input
+            type="text"
+            id="numeroSerie"
+            name="numeroSerie"
+            placeholder="ex : H2RBCD4"
+            required
+          />
+        </div>
+
+        <!-- Adress MAC -->
+        <div class="form-group">
+          <label for="MacAdress">Adress MAC <span class="required">*</span></label>
+          <input
+            type="text"
+            id="macAdress"
+            name="macAdress"
+            placeholder="24:6A:0E:D0:A3:2A"
+            required
+          />
+        </div>
+
+      </div>
+
+        <hr class="divider" />
+
+        <!-- Bouton submit -->
+        <button type="submit" class="btn-submit" id="btn-submit">
+          <span id="btn-text">Enregistrer le PC</span>
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Bannière de résultat ────────────────────────────────── -->
+  <div id="result-banner" role="alert" aria-live="polite">
+    <div class="banner-inner">
+      <div class="banner-top">
+        <div class="banner-icon"></div>
+        <div class="banner-title" id="banner-title"></div>
+      </div>
+      <div id="pc-name-block" style="display:none;">
+        <div class="pc-name-card">
+          <div>
+            <div class="pc-name-label">Nom PC attribué</div>
+            <div class="pc-name-value" id="pc-name-value"></div>
+          </div>
+          <button class="btn-copy" id="btn-copy" onclick="copyNomPC()">Copier</button>
+        </div>
+      </div>
+      <div class="banner-message" id="banner-message"></div>
+    </div>
+  </div>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer>
+    © 2026 Service IT — Gestion des Ordinaeurs d'ITY 
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+      // =========================================================
+      // CONFIG SERVEUR
+      // =========================================================
+
+      const SERVER_URL = "https://script.google.com/macros/s/AKfycbzGSZJhBNKvlQ6lo4jzhubyCXylYBm7l2qLGwtJgKX9r3k2QHAs-KTC3T9N91X3hcQ2HQ/exec";
+
+      // =========================================================
+      // ELEMENTS DOM
+      // =========================================================
+
+      const form    = document.getElementById('pc-form');
+      const btnSub  = document.getElementById('btn-submit');
+      const btnText = document.getElementById('btn-text');
+      const banner  = document.getElementById('result-banner');
+
+      // =========================================================
+      // DATE AUTO = AUJOURD'HUI
+      // =========================================================
+
+      document.getElementById(
+        'dateAttribution'
+      ).valueAsDate = new Date();
+
+      // =========================================================
+      // SUBMIT FORM
+      // =========================================================
+
+      form.addEventListener('submit', async (e) => {
+
+        e.preventDefault();
+
+        // =======================================================
+        // RECUPERATION DES VALEURS
+        // =======================================================
+
+        const typeMachine =
+          document.querySelector(
+            'input[name="typeMachine"]:checked'
+          )?.value;
+
+        const payload = {
+
+          typeMachine,
+
+          nom:
+            document.getElementById('nom')
+            .value
+            .trim(),
+
+          department:
+            document.getElementById('department')
+            .value
+            .trim(),
+
+          dateAttribution:
+            document.getElementById('dateAttribution')
+            .value,
+
+          modele:
+            document.getElementById('modele')
+            .value
+            .trim(),
+
+          numeroSerie:
+            document.getElementById('numeroSerie')
+            .value
+            .trim()
+            .toUpperCase()
+            .replace(/\s+/g, ''),
+          
+          macAdress:
+            document.getElementById('macAdress')
+            .value
+            .trim()
+            
+        };
+
+        // =======================================================
+        // VALIDATION
+        // =======================================================
+
+        if (!typeMachine) {
+
+          afficherErreur(
+            'Sélectionne un type de machine.'
+          );
+
+          return;
+        }
+
+        if (!payload.nom) {
+
+          afficherErreur(
+            'Le nom est obligatoire.'
+          );
+
+          return;
+        }
+
+        if (!payload.department) {
+
+          afficherErreur(
+            'Le département est obligatoire.'
+          );
+
+          return;
+        }
+
+        if (!payload.dateAttribution) {
+
+          afficherErreur(
+            'La date est obligatoire.'
+          );
+
+          return;
+        }
+
+        if (!payload.modele) {
+
+          afficherErreur(
+            'Le modèle est obligatoire.'
+          );
+
+          return;
+        }
+
+        if (!payload.numeroSerie) {
+
+          afficherErreur(
+            'Le numéro de série est obligatoire.'
+          );
+
+          return;
+        }
+
+        if (!payload.macAdress) {
+
+          afficherErreur(
+            'Adress Mac est obligatoire.'
+          );
+
+          return;
+        }
+
+        // =======================================================
+        // UI LOADING
+        // =======================================================
+
+        setLoading(true);
+
+        cacherBanner();
+
+        // =======================================================
+        // ENVOI API
+        // =======================================================
+
+        try {
+
+          const response = await fetch(
+            SERVER_URL,
+            {
+              method: 'POST',
+
+              headers: {
+                'Content-Type': 'application/json'
+              },
+
+              body: JSON.stringify(payload)
+            }
+          );
+
+          // =====================================================
+          // ERREUR HTTP
+          // =====================================================
+
+          if (!response.ok) {
+
+            throw new Error(
+              `Erreur serveur (${response.status})`
+            );
+          }
+
+          // =====================================================
+          // JSON BACKEND
+          // =====================================================
+
+          const result = await response.json();
+
+          // =====================================================
+          // SUCCES
+          // =====================================================
+
+          if (result.success) {
+
+            afficherSucces(
+
+              result.nomPC ||
+
+              (
+                payload.typeMachine === 'Laptop'
+                  ? 'ITY-LTOP-5001'
+                  : 'ITY-DSK-2001'
+              ),
+
+              result.message ||
+              'PC enregistré avec succès.'
+            );
+
+            form.reset();
+
+            // ===================================================
+            // REMETTRE LA DATE DU JOUR
+            // ===================================================
+
+            document.getElementById(
+              'dateAttribution'
+            ).valueAsDate = new Date();
+
+          } else {
+
+            afficherErreur(
+
+              result.error ||
+
+              'Erreur serveur.'
+            );
+          }
+
+        } catch (err) {
+
+          console.error(err);
+
+          afficherErreur(
+
+            err.message ||
+
+            'Impossible de joindre le serveur.'
+          );
+
+        } finally {
+
+          setLoading(false);
+        }
+
+      });
+
+      // =========================================================
+      // UI HELPERS
+      // =========================================================
+
+      function setLoading(state) {
+
+        btnSub.disabled = state;
+
+        btnText.textContent = state
+          ? 'Enregistrement…'
+          : 'Enregistrer le PC';
+
+        const existingSpinner =
+          document.getElementById('spinner');
+
+        // =======================================================
+        // AJOUT SPINNER
+        // =======================================================
+
+        if (state && !existingSpinner) {
+
+          const spinner =
+            document.createElement('div');
+
+          spinner.className = 'spinner';
+          spinner.id = 'spinner';
+
+          btnSub.insertBefore(
+            spinner,
+            btnText
+          );
+
+        }
+
+        // =======================================================
+        // SUPPRESSION SPINNER
+        // =======================================================
+
+        else if (!state && existingSpinner) {
+
+          existingSpinner.remove();
+        }
+      }
+
+      // =========================================================
+      // CACHER BANNIERE
+      // =========================================================
+
+      function cacherBanner() {
+
+        banner.style.display = 'none';
+
+        document.getElementById(
+          'pc-name-block'
+        ).style.display = 'none';
+      }
+
+      // =========================================================
+      // BANNIERE SUCCES
+      // =========================================================
+
+      function afficherSucces(nomPC, message) {
+
+        banner.className = '';
+
+        banner.classList.add('success');
+
+        banner.style.display = 'block';
+
+        document.getElementById(
+          'banner-title'
+        ).textContent =
+          'Enregistrement réussi';
+
+        document.getElementById(
+          'banner-message'
+        ).textContent =
+          message;
+
+        document.getElementById(
+          'pc-name-value'
+        ).textContent =
+          nomPC;
+
+        document.getElementById(
+          'pc-name-block'
+        ).style.display =
+          'block';
+
+        banner.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest'
+        });
+      }
+
+      // =========================================================
+      // BANNIERE ERREUR
+      // =========================================================
+
+      function afficherErreur(message) {
+
+        banner.className = '';
+
+        banner.classList.add('error');
+
+        banner.style.display = 'block';
+
+        document.getElementById(
+          'banner-title'
+        ).textContent =
+          'Erreur';
+
+        document.getElementById(
+          'banner-message'
+        ).textContent =
+          message;
+
+        document.getElementById(
+          'pc-name-block'
+        ).style.display =
+          'none';
+
+        banner.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest'
+        });
+      }
+
+      // =========================================================
+      // COPIER NOM PC
+      // =========================================================
+
+      function copyNomPC() {
+
+        const val =
+          document.getElementById(
+            'pc-name-value'
+          ).textContent;
+
+        // =======================================================
+        // CLIPBOARD NON SUPPORTE
+        // =======================================================
+
+        if (!navigator.clipboard) {
+
+          alert('Copie non supportée.');
+
+          return;
+        }
+
+        // =======================================================
+        // COPIE
+        // =======================================================
+
+        navigator.clipboard.writeText(val)
+
+          .then(() => {
+
+            const btn =
+              document.getElementById(
+                'btn-copy'
+              );
+
+            btn.textContent =
+              '✓ Copié';
+
+            setTimeout(() => {
+
+              btn.textContent =
+                'Copier';
+
+            }, 2000);
+
+          })
+
+          .catch(() => {
+
+            afficherErreur(
+              'Erreur lors de la copie.'
+            );
+          });
+      }
+
+      // =========================================================
+      // EVENT COPY BUTTON
+      // =========================================================
+
+      document
+        .getElementById('btn-copy')
+        .addEventListener(
+          'click',
+          copyNomPC
+        );
+</script>
+
+</body>
+</html>
