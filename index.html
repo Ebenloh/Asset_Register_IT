@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registre PC Auto — IT</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style/style.css">
+
+</head>
+<body>
+
+  <!-- ── En-tête ────────────────────────────────────────────── -->
+  <header>
+    <div class="header-badge">IT · Internal Tool</div>
+    <h1>Registre <span>PC</span> Auto</h1>
+    <p class="header-sub">Génération automatique des noms machine — zéro doublon garanti</p>
+  </header>
+
+  <!-- ── Formulaire ─────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="dot"></div>
+      <span>Nouvel enregistrement</span>
+    </div>
+
+    <div class="card-body">
+      <form id="pc-form" novalidate>
+
+        <!-- Type de machine -->
+        <div class="form-group full">
+          <label>Type de machine <span class="required">*</span></label>
+          <div class="type-group">
+            <div class="type-option">
+              <input type="radio" name="typeMachine" id="type-laptop" value="Laptop" required />
+              <label class="type-label" for="type-laptop">
+                <span class="icon">💻</span>
+                <span class="name">Laptop</span>
+                <span class="preview">ITY-LTOP-5534…</span>
+              </label>
+            </div>
+            <div class="type-option">
+              <input type="radio" name="typeMachine" id="type-desktop" value="Desktop" />
+              <label class="type-label" for="type-desktop">
+                <span class="icon">🖥️</span>
+                <span class="name">Desktop</span>
+                <span class="preview">ITY-DSK-2511…</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+      <div class="form-grid">
+
+        <!-- Nom -->
+        <div class="form-group">
+          <label for="nom">Nom <span class="required">*</span></label>
+          <input
+            type="text"
+            id="nom"
+            name="nom"
+            placeholder="ex : EBEN LOH"
+            required
+          />
+        </div>
+
+        <!-- Département -->
+        <div class="form-group">
+          <label for="department">Département <span class="required">*</span></label>
+          <input
+            type="text"
+            id="department"
+            name="department"
+            placeholder="ex : IT"
+            required
+          />
+        </div>
+
+        <!-- Modèle -->
+        <div class="form-group">
+          <label for="modele">Modèle <span class="required">*</span></label>
+          <input
+            type="text"
+            id="modele"
+            name="modele"
+            placeholder="ex : HP EliteBook 630"
+            required
+          />
+        </div>
+
+        <!-- Date -->
+        <div class="form-group">
+          <label for="dateAttribution">
+            Date d’attribution
+            <span class="required">*</span>
+          </label>
+
+          <input
+            type="date"
+            id="dateAttribution"
+            name="dateAttribution"
+            required
+          />
+        </div>
+
+        <!-- Numéro de série -->
+        <div class="form-group">
+          <label for="numeroSerie">S/N <span class="required">*</span></label>
+          <input
+            type="text"
+            id="numeroSerie"
+            name="numeroSerie"
+            placeholder="ex : H2RBCD4"
+            required
+          />
+        </div>
+
+        <!-- Adress MAC -->
+        <div class="form-group">
+          <label for="MacAdress">Adress MAC <span class="required">*</span></label>
+          <input
+            type="text"
+            id="macAdress"
+            name="macAdress"
+            placeholder="24:6A:0E:D0:A3:2A"
+            required
+          />
+        </div>
+
+      </div>
+
+        <hr class="divider" />
+
+        <!-- Bouton submit -->
+        <button type="submit" class="btn-submit" id="btn-submit">
+          <span id="btn-text">Enregistrer le PC</span>
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Bannière de résultat ────────────────────────────────── -->
+  <div id="result-banner" role="alert" aria-live="polite">
+    <div class="banner-inner">
+      <div class="banner-top">
+        <div class="banner-icon"></div>
+        <div class="banner-title" id="banner-title"></div>
+      </div>
+      <div id="pc-name-block" style="display:none;">
+        <div class="pc-name-card">
+          <div>
+            <div class="pc-name-label">Nom PC attribué</div>
+            <div class="pc-name-value" id="pc-name-value"></div>
+          </div>
+          <button class="btn-copy" id="btn-copy" onclick="copyNomPC()">Copier</button>
+        </div>
+      </div>
+      <div class="banner-message" id="banner-message"></div>
+    </div>
+  </div>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer>
+    © 2026 Service IT — Gestion des Ordinaeurs d'ITY 
+  </footer>
+
+</body>
+
+<script src="js/js.js" ></script>
+</html>
